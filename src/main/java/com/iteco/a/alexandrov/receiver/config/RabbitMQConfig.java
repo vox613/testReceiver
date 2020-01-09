@@ -6,7 +6,6 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +28,7 @@ public class RabbitMQConfig {
 
     @Bean
     Queue queue() {
-        return new Queue(queueName, false);
+        return new Queue(queueName, true);
     }
 
     @Autowired
@@ -43,14 +42,9 @@ public class RabbitMQConfig {
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
         simpleMessageListenerContainer.setQueues(queue());
         simpleMessageListenerContainer.setMessageListener(messageService);
-        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.AUTO); // change
-
+        simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL); // change
         return simpleMessageListenerContainer;
     }
 
-    @Bean
-    public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
 
 }
