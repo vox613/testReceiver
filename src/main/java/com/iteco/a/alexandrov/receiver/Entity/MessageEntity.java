@@ -1,30 +1,37 @@
 package com.iteco.a.alexandrov.receiver.Entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "messages_table")
 public class MessageEntity {
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
+    @Column
     private String message;
 
     public MessageEntity() {
+    }
+
+    public MessageEntity(long id, String message) {
+        this.id = id;
+        this.message = message;
     }
 
     public MessageEntity(String message) {
         this.message = message;
     }
 
-    public int getId() {
+
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

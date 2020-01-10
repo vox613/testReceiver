@@ -10,18 +10,18 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class MessageService implements ChannelAwareMessageListener {
+public class MessageServiceImpl implements ChannelAwareMessageListener, MessageService {
 
     private MessageRepository messageRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository) {
+    public MessageServiceImpl(MessageRepository messageRepository) {
         this.messageRepository = messageRepository;
     }
 
 
-    public void saveOrUpdate(MessageEntity messageEntity) {
-        messageRepository.save(messageEntity);
+    public MessageEntity saveOrUpdate(MessageEntity messageEntity) {
+        return messageRepository.save(messageEntity);
     }
 
 
@@ -30,12 +30,17 @@ public class MessageService implements ChannelAwareMessageListener {
         String textBody = new String(message.getBody());
         MessageEntity msgEnt = new MessageEntity(textBody);
         saveOrUpdate(msgEnt);
-
-        if (msgEnt.getId() == (messageRepository.getById(msgEnt.getId()).map(MessageEntity::getId).orElse(-1))) {
+        if (checkMessageSavedToH2(msgEnt)) {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         }
         System.out.println("getMessageProperties = " + message.getMessageProperties());
         System.out.println("Consuming Message - " + textBody);
     }
+
+
+    private boolean checkMessageSavedToH2(MessageEntity msgEnt){
+        return msgEnt.getId() == (messageRepository.getById(msgEnt.getId()).map(MessageEntity::getId).orElse(-1L));
+    }
+
 
 }

@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface MessageRepository extends CrudRepository<MessageEntity, Integer> {
-    Optional<MessageEntity> getById(int id);
+public interface MessageRepository extends JpaRepository<MessageEntity, Integer> {
+    Optional<MessageEntity> getById(long id);
 }

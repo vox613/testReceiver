@@ -1,6 +1,6 @@
 package com.iteco.a.alexandrov.receiver.config;
 
-import com.iteco.a.alexandrov.receiver.Service.MessageService;
+import com.iteco.a.alexandrov.receiver.Service.MessageServiceImpl;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -24,7 +24,7 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.password}")
     private String password;
 
-    private MessageService messageService;
+    private MessageServiceImpl messageServiceImpl;
 
     @Bean
     Queue queue() {
@@ -32,16 +32,16 @@ public class RabbitMQConfig {
     }
 
     @Autowired
-    public RabbitMQConfig(MessageService messageService) {
-        this.messageService = messageService;
+    public RabbitMQConfig(MessageServiceImpl messageServiceImpl) {
+        this.messageServiceImpl = messageServiceImpl;
     }
 
     @Bean
-    MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
+    public MessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
         SimpleMessageListenerContainer simpleMessageListenerContainer = new SimpleMessageListenerContainer();
         simpleMessageListenerContainer.setConnectionFactory(connectionFactory);
         simpleMessageListenerContainer.setQueues(queue());
-        simpleMessageListenerContainer.setMessageListener(messageService);
+        simpleMessageListenerContainer.setMessageListener(messageServiceImpl);
         simpleMessageListenerContainer.setAcknowledgeMode(AcknowledgeMode.MANUAL); // change
         return simpleMessageListenerContainer;
     }
