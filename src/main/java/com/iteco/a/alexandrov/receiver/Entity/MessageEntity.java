@@ -2,6 +2,9 @@ package com.iteco.a.alexandrov.receiver.Entity;
 
 import javax.persistence.*;
 
+/**
+ * A class is a message entity that is mapped to a database table.
+ */
 @Entity
 @Table(name = "messages_table")
 public class MessageEntity {
@@ -24,8 +27,6 @@ public class MessageEntity {
     public MessageEntity(String message) {
         this.message = message;
     }
-
-
 
     public long getId() {
         return id;
